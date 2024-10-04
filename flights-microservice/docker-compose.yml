@@ -1,0 +1,11 @@
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: flights_db
+    ports:
+      - "5432:5432"
