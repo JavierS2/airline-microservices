@@ -1,5 +1,5 @@
-version: '3.8'
 services:
+  # Servicio de PostgreSQL
   postgres:
     image: postgres:13
     container_name: postgres-booking
@@ -8,12 +8,13 @@ services:
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: bookingJC
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Exponer PostgreSQL en el puerto 5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - booking-network
 
+  # Servicio de la aplicación Spring Boot
   app:
     image: openjdk:17-jdk-slim
     container_name: spring-boot-booking
@@ -23,20 +24,23 @@ services:
       SPRING_DATASOURCE_PASSWORD: 1234
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_APPLICATION_NAME: booking
+      SERVER_PORT: 9999
     ports:
-      - "8080:8080"
+      - "9999:9999"  
     volumes:
-      - ./target:/app
+      - ./target:/app  
     working_dir: /app
-    entrypoint: ["java", "-jar", "your-app.jar"] 
+    entrypoint: ["java", "-jar", "your-app.jar"]  .jar generado
     depends_on:
-      - postgres
+      - postgres  
     networks:
       - booking-network
 
+# Definición de volúmenes
 volumes:
   postgres_data:
 
+# Definición de redes
 networks:
   booking-network:
     driver: bridge
