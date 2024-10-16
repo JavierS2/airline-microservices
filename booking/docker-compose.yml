@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres-booking
+    environment:
+      POSTGRES_USER: bookingJC
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: bookingJC
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - booking-network
+
+  app:
+    image: openjdk:17-jdk-slim
+    container_name: spring-boot-booking
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bookingJC
+      SPRING_DATASOURCE_USERNAME: bookingJC
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_APPLICATION_NAME: booking
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target:/app
+    working_dir: /app
+    entrypoint: ["java", "-jar", "your-app.jar"]
+    depends_on:
+      - postgres
+    networks:
+      - booking-network
+
+volumes:
+  postgres_data:
+
+networks:
+  booking-network:
+    driver: bridge
